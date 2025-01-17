@@ -18,7 +18,7 @@ with DAG(
     'etl_data_limpeza',
     default_args=default_args,
     description='Pipeline ETL com limpeza de dados usando Airflow',
-    schedule_interval='@daily',
+    schedule_interval= None,
     start_date=datetime(2025, 1, 14),
     catchup=False
 ) as dag:
@@ -29,7 +29,7 @@ with DAG(
             raise FileNotFoundError(f"{csv_path} não encontrado!")
         
         df = pd.read_csv(csv_path)
-        df.to_csv('/tmp/raw_data.csv', index=False)  # Salva como um arquivo temporário
+        df.to_csv('/tmp/raw_data.csv', index=False) 
         print('Leitura do CSV concluída!')
 
     def clean_data():
@@ -62,14 +62,14 @@ with DAG(
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
                 """,
                 (
-                    row['State'],  # Substitua pelo nome real da coluna no DataFrame
-                    row['Model Year'],  # Substitua pelo nome real da coluna no DataFrame
-                    row['Make'],   # Substitua pelo nome real da coluna no DataFrame
-                    row['Electric Vehicle Type'],  # Substitua pelo nome real da coluna no DataFrame
-                    row['Electric Range'],  # Substitua pelo nome real da coluna no DataFrame
-                    row['Base MSRP'],  # Substitua pelo nome real da coluna no DataFrame
-                    row['Legislative District'],  # Substitua pelo nome real da coluna no DataFrame
-                    row['CAFV Eligibility Simple']  # Substitua pelo nome real da coluna no DataFrame
+                    row['State'],  
+                    row['Model Year'],  
+                    row['Make'],   
+                    row['Electric Vehicle Type'],  
+                    row['Electric Range'],  
+                    row['Base MSRP'],  
+                    row['Legislative District'],  
+                    row['CAFV Eligibility Simple']  
                 )
             )
         conn.commit()
