@@ -1,12 +1,13 @@
 import psycopg2
+from psycopg2 import sql
 
-def criar_tabela():
-    # Conectar ao banco de dados PostgreSQL
+def create():
+   # Conectar ao banco de dados PostgreSQL
     conexao = psycopg2.connect(
         dbname="postgres",
-        user="postgres",
-        password="postgres",
-        host="172.17.0.2",
+        user="airflow",
+        password="airflow",
+        host="172.18.0.3",
         port="5432"
     )
 
@@ -15,24 +16,20 @@ def criar_tabela():
 
     # Comando SQL para criar uma tabela
     criar_tabela = """
-    CREATE TABLE IF NOT EXISTS produtos_transformados (
+    CREATE TABLE IF NOT EXISTS arquivos_csv (
         id SERIAL PRIMARY KEY,
-        nome VARCHAR(100),
-        preco NUMERIC(10, 2),
-        preco_com_desconto NUMERIC(10, 2)
+        nome_arquivo VARCHAR(255),
+        conteudo BYTEA,  -- Coluna para armazenar o arquivo em formato binário
+        data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """
 
 
     # Executar o comando para criar a tabela
     cursor.execute(criar_tabela)
-
-    # Confirmar as alterações no banco de dados
-    tabelas = cursor.fetchall()
-    print("Tabelas no esquema 'public':")
-    for tabela in tabelas:
-        print(tabela[0])
-
+    conexao.commit()
+    
     # Fechar a conexão e o cursor
     cursor.close()
     conexao.close()
+create ()
